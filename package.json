@@ -1,0 +1,27 @@
+{
+  "name": "straightlisp",
+  "version": "0.0.1",
+  "description": "Simple lisp using js",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -r ts-node/register test/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shakthi/straightlisp.git"
+  },
+  "author": "Shakthi Prasad GS <shakthi.gs87@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Shakthi/straightlisp/issues"
+  },
+  "homepage": "https://github.com/Shakthi/straightlisp#readme",
+  "dependencies": {
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.0",
+    "assert": "^1.4.1",
+    "mocha": "^5.2.0",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.1.3"
+  }
+}

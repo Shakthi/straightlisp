@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "lib": [ "es2015" ],
+        "noImplicitAny": true,
+        "allowJs": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "types": [
+            "node","mocha"
+          ],
+          "baseUrl": ".",
+    },
+    "include": [
+        "src/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ],
+    "typeRoots": [
+        "src/"
+    ],
+}
+
