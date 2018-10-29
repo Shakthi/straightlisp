@@ -9,6 +9,9 @@
             "node","mocha"
           ],
           "baseUrl": ".",
+          "paths": {
+            "canto34": ["type/canto34.d.ts"]
+          }
     },
     "include": [
         "src/*"

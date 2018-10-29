@@ -39,6 +39,10 @@ buffer-from@^1.0.0, buffer-from@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.1.tgz#32713bc028f75c02fdb710d7c7bcec1f2c6070ef"
 
+canto34@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/canto34/-/canto34-2.0.1.tgz#3e965e7542a62080a8e688d552fbc090577fb20f"
+
 commander@2.15.1:
   version "2.15.1"
   resolved "http://registry.npmjs.org/commander/-/commander-2.15.1.tgz#df46e867d0fc2aec66a34662b406a9ccafff5b0f"
