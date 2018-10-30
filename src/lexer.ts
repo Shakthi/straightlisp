@@ -13,6 +13,10 @@ lexer.addTokenType(types.closeSquareBracket());
 lexer.addTokenType(types.openSquareBracket());
 lexer.addTokenType(types.closeParen());
 
+lexer.addTokenType(types.closeBracket());
+lexer.addTokenType(types.openBracket());
+
+
 // add a token for whitespace
 lexer.addTokenType({ 
   name: "identifier",       // give it a name
