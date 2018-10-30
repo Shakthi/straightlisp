@@ -39,9 +39,9 @@ buffer-from@^1.0.0, buffer-from@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.1.tgz#32713bc028f75c02fdb710d7c7bcec1f2c6070ef"
 
-canto34@^2.0.1:
+canto34@Shakthi/canto34:
   version "2.0.1"
-  resolved "https://registry.yarnpkg.com/canto34/-/canto34-2.0.1.tgz#3e965e7542a62080a8e688d552fbc090577fb20f"
+  resolved "https://codeload.github.com/Shakthi/canto34/tar.gz/33d40897bfa6ea3df9118db6c3483f1fa6645a1b"
 
 commander@2.15.1:
   version "2.15.1"
