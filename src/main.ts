@@ -1,6 +1,8 @@
 
 import lexer from './lexer'
 import {Token} from 'canto34'
+import build from './builder'
 
-console.log(lexer.tokenize("foo 1 ;;  \"bar\" 2"));
+
+console.log(build(lexer.tokenize('1')))
 

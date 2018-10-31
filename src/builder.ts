@@ -1,5 +1,4 @@
 import { Token } from 'canto34'
-import { start } from 'repl';
 
 
 export enum NodeType {
@@ -18,13 +17,14 @@ export enum NodeType {
 
 export class ASTNode {
 
+    public atom:Token|null;
     constructor(public type: NodeType, public children?: ASTNode[]) {
 
     }
 
 }
 
-export default function builder(params: Token[]) {
+export default function builder(params: Token[]):ASTNode {
 
     var current: Token = null;
     var parsed: Token[]=[];
@@ -32,11 +32,11 @@ export default function builder(params: Token[]) {
 
 
     function next() {
+        if (current)
+                parsed.push(current);
         if (!params.length)
             current = null;
-        else {
-            if (current)
-                parsed.push(current);
+        else {            
             current = params.shift();
         }
 
@@ -52,7 +52,7 @@ export default function builder(params: Token[]) {
 
     function peak(name: string) {
         if (name === "eof" && current == null)
-            return;
+            return true;
 
         if (current.type === name)
             return true;
@@ -66,12 +66,38 @@ export default function builder(params: Token[]) {
         throw (`Expected ${name} received ${current.type}`)
     }
 
+    /*
+    
+     [  ]
+    
+    */
+
     function start() {
         if (accept("integer")) {
+            ast= new ASTNode(NodeType.atom);
+            ast.atom = parsed[0];
             expect("eof")
+            return;
+        }else if(accept("string")) {
+            ast= new ASTNode(NodeType.atom);
+            ast.atom = parsed[0];
+            expect("eof")
+            return;
+        }else if(accept("symbol")) {
+            ast= new ASTNode(NodeType.atom);
+            ast.atom = parsed[0];
+            expect("eof")
+            return;
         }
+        throw "Syntax error";
+        
 
     }
+
+    
+    next();
+    start();
+    return ast;
 
 
 

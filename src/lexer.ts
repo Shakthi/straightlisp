@@ -35,7 +35,7 @@ lexer.addTokenType({
 
 
 lexer.addTokenType({ 
-  name: "atom",       // give it a name
+  name: "symbol",       // give it a name
   regexp: /[^ ]+/, // match spaces and tabs
 });
 
