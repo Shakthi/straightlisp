@@ -2,6 +2,8 @@ import evaluate from '../src/evaluate'
 import build from '../src/builder'
 import lexer from '../src/lexer'
 
+import context from '../src/builtin'
+
 import * as assert from 'assert';
 
 
@@ -22,34 +24,28 @@ describe('Builder', function () {
       });
 
 
-      it('function should eval string', function () {
+      it('function should eval integer calc', function () {
         
-        let context={
-          '+':function(a:any,b:any){
-            let result = [].slice.call(arguments).map((element:any)=>evaluate(element,this)).reduce((a:any,b:any)=> a + b,0);            
-            return result;            
-          },
-          '-':function(a:any,b:any){
-            let temparray = [].slice.call(arguments);
-            const first = temparray.shift()
-            let result = temparray.map((element:any)=>evaluate(element,this)).reduce((a:any,b:any)=> a - b,evaluate(first,this) );            
-            return result;            
-          },
-          '*':function(a:any,b:any){
-            let result = [].slice.call(arguments).map((element:any)=>evaluate(element,this)).reduce((a:any,b:any)=> a * b,0);            
-            return result;            
-          },
-          '/':function(a:any,b:any){
-            let temparray = [].slice.call(arguments);
-            const first = temparray.shift()
-            let result = temparray.map((element:any)=>evaluate(element,this)).reduce((a:any,b:any)=> a / b,evaluate(first,this) );            
-            return result;            
-          }
-
-        };
+       
 
         assert.equal(evaluate(build(lexer.tokenize('[+ 1 2 5]')),context),8);
         assert.equal(evaluate(build(lexer.tokenize('[+ [- 3 2] 7]')),context),8);
+        
+      });
+
+
+      it('function should eval relational op', function () {
+       
+        assert.equal(evaluate(build(lexer.tokenize('[== 1 1]')),context),true);
+        assert.equal(evaluate(build(lexer.tokenize('[== 2 [+ 1 1]]')),context),true);
+        assert.equal(evaluate(build(lexer.tokenize('[== 5 [+ 1 1]]')),context),false);
+        assert.equal(evaluate(build(lexer.tokenize('[> 3 2]')),context),true);
+
+        assert.equal(evaluate(build(lexer.tokenize('[> 30 20 2 1]')),context),false);
+
+
+
+
         
       });
 

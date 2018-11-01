@@ -32,7 +32,6 @@ export default function evaluate(node: ASTNode, context: any = {}) {
                     let res:any= lookup(first.atom.content,context)
                     return res.apply(context,items);
                     
-                    break;
                 default:
                     return node.atom.content;
             }
