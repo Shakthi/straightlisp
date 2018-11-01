@@ -66,7 +66,7 @@ export default function builder(params: Token[]): ASTNode {
     function expect(name: string) {
         if (accept(name))
             return true;
-        throw (`Expected ${name} received ${current?current.type:"eof"}`)
+        throw (`Expected ${name} received ${current ? current.type : "eof"}`)
     }
 
 
@@ -77,10 +77,10 @@ export default function builder(params: Token[]): ASTNode {
         do {
 
             let element = listElement();
-            if(element==null)
+            if (element == null)
                 break;
             else
-            items.push(element);
+                items.push(element);
 
 
 
@@ -107,9 +107,9 @@ export default function builder(params: Token[]): ASTNode {
         }
         else if (accept("string")) {
             return lastAccepted;
-        }else if (accept("identifier")) {
+        } else if (accept("identifier")) {
             return lastAccepted;
-        }else if (accept("symbol")) {
+        } else if (accept("symbol")) {
             return lastAccepted;
         }
 
@@ -118,7 +118,16 @@ export default function builder(params: Token[]): ASTNode {
     }
 
     function listElement() {
-        if (accept("open square bracket")) {
+
+        if (accept("open bracket")) {
+            const ast = new ASTNode(NodeType.quotedList);
+            ast.children = list();
+            expect("close bracket");
+            return ast;
+
+        }
+
+        else if (accept("open square bracket")) {
 
             const ast = new ASTNode(NodeType.list);
             ast.children = list();
@@ -144,7 +153,7 @@ export default function builder(params: Token[]): ASTNode {
     function start() {
         let result = listElement();
         if (result == null) {
-            throw (`Expected list or atom found  ${current.type}`);
+            throw (`Expected list or atom found  ${current?current.type:"eof"}`);
         }
         expect("eof")
         return result;
