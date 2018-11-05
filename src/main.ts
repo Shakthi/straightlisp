@@ -14,11 +14,17 @@ var rl = readline.createInterface({
     output: process.stdout
 });
 
+rl.setPrompt("# ")
+rl.prompt();
 rl.on('line', (line: string) => {
 
-    evaluate(build(lexer.tokenize(line)),builtin);
+    try {
+        console.log("> "+evaluate(build(lexer.tokenize(line)),builtin));    
+    } catch (error) {
+        console.error("! "+error);
+    }
     
-    
+    rl.prompt();
 });
 
 

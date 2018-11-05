@@ -17,6 +17,8 @@ export default function evaluate(node: ASTNode, context: any = {}) {
             default:
                 return node.atom.content;
         }
+    
+        
 
     case NodeType.list :
         if(node.children.length==0){
@@ -33,7 +35,7 @@ export default function evaluate(node: ASTNode, context: any = {}) {
                     return res.apply(context,items);
                     
                 default:
-                    return node.atom.content;
+                    throw `Non symbol - ${first.atom.type} on calling position`;
             }
             //debugger;
 
