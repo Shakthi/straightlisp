@@ -18,7 +18,10 @@ export default function evaluate(node: ASTNode, context: any = {}) {
                 return node.atom.content;
         }
     
-        
+
+    case NodeType.quotedList:
+        return new ASTNode(NodeType.list,node.children);
+
 
     case NodeType.list :
         if(node.children.length==0){

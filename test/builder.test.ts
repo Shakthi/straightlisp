@@ -87,6 +87,12 @@ describe('Builder', function () {
       assert.equal(ast.children.length, 3);
     });
 
+    it('should build on  [a {b c d}]', function () {
+      let ast = build(lexer.tokenize('[a {b c d}]'));
+      assert.equal(ast.children.length, 2);
+    });
+
+    
 
 
 
