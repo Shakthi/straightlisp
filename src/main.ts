@@ -4,6 +4,7 @@ import build from './builder'
 import evaluate from './evaluate';
 
 import builtin from './builtin'
+import print from './print'
 
 
 
@@ -19,7 +20,7 @@ rl.prompt();
 rl.on('line', (line: string) => {
 
     try {
-        console.log("> "+evaluate(build(lexer.tokenize(line)),builtin));    
+        console.log("> "+print(evaluate(build(lexer.tokenize(line)),builtin)));    
     } catch (error) {
         console.error("! "+error);
     }
