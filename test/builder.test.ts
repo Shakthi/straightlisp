@@ -94,6 +94,17 @@ describe('Builder', function () {
 
     
 
+    it('Should handled unquoted  list', function () {        
+      build(lexer.tokenize('  $[+ 1 100] '));
+      assert.ok(true);
+    });
+
+    it('Should handled unquoted symbol list', function () {        
+        build(lexer.tokenize('$x'));
+        
+      assert.ok(true);
+    });
+
 
 
 

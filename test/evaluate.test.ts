@@ -69,13 +69,13 @@ describe('Builder', function () {
 
       
 
-      it('Should handled unquoted  list', function () {        
-        assert.equal(evaluate(build(lexer.tokenize('[eval {+ 2  $[+ 1 100] }]')),context),103);
-      });
+      // it('Should handled unquoted  list', function () {        
+      //   assert.equal(evaluate(build(lexer.tokenize('[eval {+ 2  $[+ 1 100] }]')),context),103);
+      // });
 
-      it('Should handled unquoted symbol list', function () {        
-          assert.equal(evaluate(build(lexer.tokenize('[eval {+ 1 3 $x}]')),context),105);
-      });
+      // it('Should handled unquoted symbol list', function () {        
+      //     assert.equal(evaluate(build(lexer.tokenize('[eval {+ 1 3 $x}]')),context),105);
+      // });
 
       /*
       mac (defcall type params ... body)

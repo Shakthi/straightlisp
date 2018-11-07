@@ -58,16 +58,19 @@ let builtinContext: any = {
   '-': assocOperater((a: any, b: any) => a - b),
   '/': assocOperater((a: any, b: any) => a / b),
   '>': relationalOperater((a: any, b: any) => a > b),
+  '>=': relationalOperater((a: any, b: any) => a >= b),
+  '<=': relationalOperater((a: any, b: any) => a <= b),
+  '!=': relationalOperater((a: any, b: any) => a != b),
   '<': relationalOperater((a: any, b: any) => a < b),
   '==': relationalOperater((a: any, b: any) => a == b),
   'set': functionWrapper(function (astName: ASTNode, content: any) {
     this[astName.children[0].atom.content] =content;
     return content;
   }),
-  'eval': functionWrapper(function  evalfun(arg: ASTNode) {
+  'eval': functionWrapper(function  (arg: ASTNode) {
     return evaluate(arg, this)
   }),
-  'print': functionWrapper(function  printfun(arg: ASTNode) {
+  'print': functionWrapper(function  (arg: ASTNode) {
     return print(arg)
   })
 }

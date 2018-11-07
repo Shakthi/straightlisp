@@ -117,7 +117,22 @@ export default function builder(params: Token[]): ASTNode {
 
     }
 
+
+
     function listElement() {
+
+        let prefixUnquote = false;
+        if (accept("doller")) {
+
+            if (!(peak("open square bracket") || peak("identifier"))) {
+                throw `$ expected to follwed by an id or list received ${current ? current.type : "eof"}`
+            }
+
+            prefixUnquote = true;
+
+        }
+
+
 
         if (accept("open bracket")) {
             const ast = new ASTNode(NodeType.quotedList);
@@ -129,7 +144,7 @@ export default function builder(params: Token[]): ASTNode {
 
         else if (accept("open square bracket")) {
 
-            const ast = new ASTNode(NodeType.list);
+            const ast = new ASTNode(prefixUnquote ? NodeType.escapedList : NodeType.list);
             ast.children = list();
             expect("close square bracket");
 
@@ -138,7 +153,7 @@ export default function builder(params: Token[]): ASTNode {
 
             let token = atom();
             if (token != null) {
-                const astatom: ASTNode = new ASTNode(NodeType.atom);
+                const astatom: ASTNode = new ASTNode(prefixUnquote? NodeType.escapedAtom :NodeType.atom);
                 astatom.atom = token;
                 return astatom;
             }
@@ -153,7 +168,7 @@ export default function builder(params: Token[]): ASTNode {
     function start() {
         let result = listElement();
         if (result == null) {
-            throw (`Expected list or atom found  ${current?current.type:"eof"}`);
+            throw (`Expected list or atom found  ${current ? current.type : "eof"}`);
         }
         expect("eof")
         return result;
