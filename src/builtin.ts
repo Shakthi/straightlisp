@@ -60,10 +60,10 @@ let builtinContext: any = {
   '>': relationalOperater((a: any, b: any) => a > b),
   '<': relationalOperater((a: any, b: any) => a < b),
   '==': relationalOperater((a: any, b: any) => a == b),
-  'set': function (astName: ASTNode, content: any) {
-    this[astName.atom.content] = evaluate(content, this);
-    return this[astName.atom.content];
-  },
+  'set': functionWrapper(function (astName: ASTNode, content: any) {
+    this[astName.children[0].atom.content] =content;
+    return content;
+  }),
   'eval': functionWrapper(function  evalfun(arg: ASTNode) {
     return evaluate(arg, this)
   }),

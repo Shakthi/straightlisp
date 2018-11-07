@@ -33,6 +33,12 @@ lexer.addTokenType({
   ignore: true      // don't return this token in the result
 });
 
+// add a token for whitespace
+lexer.addTokenType({ 
+  name: "doller",       // give it a name
+  regexp: /\$/, // match spaces and tabs
+});
+
 
 lexer.addTokenType({ 
   name: "symbol",       // give it a name

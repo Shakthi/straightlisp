@@ -26,6 +26,7 @@ rl.on('line', (line: string) => {
     }
     
     rl.prompt();
+    //(def (fun x y)  {+ x y})
 });
 
 
