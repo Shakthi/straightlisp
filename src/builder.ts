@@ -15,14 +15,44 @@ export enum NodeType {
 
 }
 
+
+
+
 export class ASTNode {
 
-    public atom: Token | null;
-    constructor(public type: NodeType, public children?: ASTNode[]) {
+    
+    constructor(public type: NodeType, public children?: ASTNode[],public atom?:Token) {
 
     }
 
+    static  TokenCreate(content: any,type?: string,line: number=-1,
+        character: number =-1):Token{
+
+            if(!type){
+                if(typeof content === "string"){
+                    type ="string"
+                }else if(typeof content === "number"){
+                    type ="integer"
+                }
+
+            }
+
+            let token = {
+                content,
+                type,
+                line,
+                character
+
+            }
+
+            return token as Token;
+
+
+        }
+    
+
 }
+
 
 export default function builder(params: Token[]): ASTNode {
 

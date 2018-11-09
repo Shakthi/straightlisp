@@ -4,8 +4,9 @@ import  print  from './print';
 
 function assocOperater(fun: any) {
   return function () {
-    let result = [].slice.call(arguments).map((element: any) => evaluate(element, this)).reduce(fun);
-    return result;
+    let evalresult = [].slice.call(arguments).map((element: any) => evaluate(element, this))
+    let result= evalresult.map((i:ASTNode)=>i.atom.content).reduce(fun);
+    return new ASTNode(NodeType.atom,undefined,ASTNode.TokenCreate(result,evalresult[0].atom.type));
   }
 }
 
@@ -17,14 +18,14 @@ function relationalOperater(fun: any) {
       const element = convertedArray[i];
       const element2 = convertedArray[i+1];
 
-      if(!fun(element,element2))
-        return false;
+      if(!fun(element.atom.content,element2.atom.content))
+         return new ASTNode(NodeType.atom,undefined,ASTNode.TokenCreate(false,"boolean"));
     }
 
     if(convertedArray.length==1)
-      return false;
+      return new ASTNode(NodeType.atom,undefined,ASTNode.TokenCreate(false,"boolean"));
 
-      return true;
+      return new ASTNode(NodeType.atom,undefined,ASTNode.TokenCreate(true,"boolean"));
 
     
   }

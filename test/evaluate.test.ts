@@ -13,13 +13,20 @@ describe('Builder', function () {
         
       it('function should eval integer', function () {
 
-        assert.equal(evaluate(build(lexer.tokenize('1'))),1);
+        assert.equal(evaluate(build(lexer.tokenize('1'))).atom.content,1);
         
       });
 
       it('function should eval string', function () {
 
-        assert.equal(evaluate(build(lexer.tokenize('"one"'))),"one");
+        assert.equal(evaluate(build(lexer.tokenize('"one"'))).atom.content,"one");
+        
+      });
+
+
+      it('function should eval nested integer calc', function () {
+   
+        assert.equal(evaluate(build(lexer.tokenize('[+ [- 3 2] 7]')),context).atom.content,8);
         
       });
 
@@ -28,25 +35,25 @@ describe('Builder', function () {
         
        
 
-        assert.equal(evaluate(build(lexer.tokenize('[+ 1 2 5]')),context),8);
-        assert.equal(evaluate(build(lexer.tokenize('[+ [- 3 2] 7]')),context),8);
+        assert.equal(evaluate(build(lexer.tokenize('[+ 1 2 5]')),context).atom.content,8);
         
       });
 
 
+
       it('function should eval relational op', function () {
        
-        assert.equal(evaluate(build(lexer.tokenize('[== 1 1]')),context),true);
-        assert.equal(evaluate(build(lexer.tokenize('[== 2 [+ 1 1]]')),context),true);
-        assert.equal(evaluate(build(lexer.tokenize('[== 5 [+ 1 1]]')),context),false);
-        assert.equal(evaluate(build(lexer.tokenize('[> 3 2]')),context),true);
+        assert.equal(evaluate(build(lexer.tokenize('[== 1 1]')),context).atom.content,true);
+        assert.equal(evaluate(build(lexer.tokenize('[== 2 [+ 1 1]]')),context).atom.content,true);
+        assert.equal(evaluate(build(lexer.tokenize('[== 5 [+ 1 1]]')),context).atom.content,false);
+        assert.equal(evaluate(build(lexer.tokenize('[> 3 2]')),context).atom.content,true);
 
-        assert.equal(evaluate(build(lexer.tokenize('[> 30 20 2 1]')),context),true);
+        assert.equal(evaluate(build(lexer.tokenize('[> 30 20 2 1]')),context).atom.content,true);
 
-        assert.equal(evaluate(build(lexer.tokenize('[> 30 200 2 1]')),context),false);
-        assert.equal(evaluate(build(lexer.tokenize('[> 30 20 2 3]')),context),false);
+        assert.equal(evaluate(build(lexer.tokenize('[> 30 200 2 1]')),context).atom.content,false);
+        assert.equal(evaluate(build(lexer.tokenize('[> 30 20 2 3]')),context).atom.content,false);
 
-        assert.equal(evaluate(build(lexer.tokenize('[== 2 [+ 1 1] [- 4 2 ]]')),context),true);
+        assert.equal(evaluate(build(lexer.tokenize('[== 2 [+ 1 1] [- 4 2 ]]')),context).atom.content,true);
 
 
 
@@ -68,14 +75,21 @@ describe('Builder', function () {
 
 
       
+      it('Should throw missplaced $', function () {        
+        assert.throws(()=>evaluate(build(lexer.tokenize(' $[+ 1 100] '))))
+      });
 
-      // it('Should handled unquoted  list', function () {        
-      //   assert.equal(evaluate(build(lexer.tokenize('[eval {+ 2  $[+ 1 100] }]')),context),103);
-      // });
+      it('Should throw missplaced $ on symbol', function () {        
+        assert.throws(()=>evaluate(build(lexer.tokenize(' $a '))))
+      });
 
-      // it('Should handled unquoted symbol list', function () {        
-      //     assert.equal(evaluate(build(lexer.tokenize('[eval {+ 1 3 $x}]')),context),105);
-      // });
+      it('Should handled unquoted  list', function () {        
+        assert.equal(evaluate(build(lexer.tokenize(' {+ 2  $[+ 1 100] }')),context),103);
+      });
+
+      it('Should handled unquoted symbol list', function () {        
+          assert.equal(evaluate(build(lexer.tokenize('[eval {+ 1 3 $x}]')),context),105);
+      });
 
       /*
       mac (defcall type params ... body)
