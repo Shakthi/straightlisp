@@ -42,7 +42,7 @@ lexer.addTokenType({
 
 lexer.addTokenType({ 
   name: "symbol",       // give it a name
-  regexp: /[^ ]+/, // match spaces and tabs
+  regexp: /[^ \]}]+/, // match spaces and tabs
 });
 
 

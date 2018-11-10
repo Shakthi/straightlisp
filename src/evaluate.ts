@@ -2,12 +2,42 @@
 import builder, { ASTNode, NodeType } from './builder'
 
 
-function lookup(param: string, context: any) {
-    return context[param];
+function lookup(param: string, context: any):any {
+    let res= context[param];
+    if(res !== undefined)
+        return res;
+
+    if( context["___super____"]){
+        return lookup(param, context["___super____"])
+    }
+
+    return undefined;
+}
+
+/*
+
+[[{$1 $  [ /2 ]  45 22]
+
+
+*/
+
+let lexicalContext = new WeakMap();
+
+function callList(node: ASTNode,items:ASTNode[]):ASTNode{
+    let localContext:any={};
+    localContext["___super____"] = lexicalContext.get(node);
+
+
+    items.forEach((element,index)=>{
+        localContext["%"+(index+1)] = element;
+    })
+
+    return evaluate(node,localContext);
+    
 }
 
 
-export function evaluateQuoted(node: ASTNode, context: any = {}):ASTNode {
+export function evaluateQuoted(node: ASTNode, context: any = {}): ASTNode {
 
     function expand(innode: ASTNode) {
 
@@ -16,7 +46,7 @@ export function evaluateQuoted(node: ASTNode, context: any = {}):ASTNode {
         }
         if (innode.type == NodeType.escapedList) {
 
-            return evaluate(new ASTNode(NodeType.list,innode.children), context);
+            return evaluate(new ASTNode(NodeType.list, innode.children), context);
 
 
         }
@@ -32,9 +62,11 @@ export function evaluateQuoted(node: ASTNode, context: any = {}):ASTNode {
         return innode;
     }
 
-    let outchildrens = node.children?node.children.map(expand):null;
+    let outchildrens = node.children ? node.children.map(expand) : null;
 
-    return new ASTNode(NodeType.list, outchildrens);
+    let  res = new ASTNode(NodeType.list, outchildrens);
+    lexicalContext.set(res,context);
+    return res;
 
 }
 
@@ -45,6 +77,7 @@ export default function evaluate(node: ASTNode, context: any = {}) {
         case NodeType.atom:
             switch (node.atom.type) {
                 case "identifier":
+                case "symbol":
                     return lookup(node.atom.content, context)
 
                 default:
@@ -66,21 +99,36 @@ export default function evaluate(node: ASTNode, context: any = {}) {
             else {
                 let items = node.children.slice();
                 let first = items.shift();
+                let res: any = evaluate(first, context);
 
-                switch (first.atom.type) {
-                    case "identifier":
-                    case "symbol":
-                        let res: any = lookup(first.atom.content, context)
-                        return res.apply(context, items);
+                if (res instanceof ASTNode && res.type == NodeType.list) {
+                    return callList(res, items);
 
-                    default:
-                        throw `Non symbol - ${first.atom.type} on calling position`;
                 }
-                //debugger;
+                else if (typeof (res) === "function") {
+
+                    return res.apply(context, items);
+                }
+                else {
+
+                    throw "Cannot funccall" +res;
+
+                }
 
 
             }
 
+        default:
+            throw `Should not come here`;
+
+        //debugger;
+
+
     }
 
 }
+
+/*
+set {x} {+ $1 $2 } 
+
+*/

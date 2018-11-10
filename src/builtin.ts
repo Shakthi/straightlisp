@@ -36,7 +36,7 @@ function functionWrapper(functi: any) {
 
 
   return function () {
-    var context = builtinContext;
+    var context = this;
     let evaledArguments = [].slice.call(arguments).map((arg: ASTNode) => {
       return evaluate(arg, context);
     });
@@ -73,7 +73,11 @@ let builtinContext: any = {
   }),
   'print': functionWrapper(function  (arg: ASTNode) {
     return print(arg)
-  })
+  }),
+
+  'printRaw': function  (arg: ASTNode) {
+    return print(arg);
+  }
 }
 
 
