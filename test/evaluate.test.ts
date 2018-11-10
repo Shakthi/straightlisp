@@ -66,11 +66,11 @@ describe('Builder', function () {
 
 
       it('Should skipping eval quotedlist', function () {
-        assert.notEqual(evaluate(build(lexer.tokenize('{+ 1 3}')),context),4);
+        assert.equal(evaluate(build(lexer.tokenize('{+ 1 3}')),context).children.length,3);
       });
 
       it('Should double eval should eval quoted list', function () {
-        assert.equal(evaluate(build(lexer.tokenize('[eval {+ 1 3}]')),context),4);
+        assert.equal(evaluate(build(lexer.tokenize('[eval {+ 1 3}]')),context).atom.content,4);
       });
 
 
@@ -84,11 +84,13 @@ describe('Builder', function () {
       });
 
       it('Should handled unquoted  list', function () {        
-        assert.equal(evaluate(build(lexer.tokenize(' {+ 2  $[+ 1 100] }')),context),103);
+        assert.equal(evaluate(build(lexer.tokenize(' {+ 2  $[+ 1 100] }')),context).children[2].atom.content,101);
       });
 
-      it('Should handled unquoted symbol list', function () {        
-          assert.equal(evaluate(build(lexer.tokenize('[eval {+ 1 3 $x}]')),context),105);
+      it('Should handled unquoted symbol list', function () {    
+         
+          evaluate(build(lexer.tokenize('[set {x} 102]')),context)
+          assert.equal(evaluate(build(lexer.tokenize('[eval {+ 1 3 $x}]')),context).atom.content,106);
       });
 
       /*

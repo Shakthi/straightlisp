@@ -14,7 +14,7 @@ describe('builtin', function () {
         it('set should work', function () {
 
             evaluate(build(lexer.tokenize('[set {sum} [ + 23 44]]')), context);
-            assert.equal(evaluate(build(lexer.tokenize('sum')), context),23+44);
+            assert.equal(evaluate(build(lexer.tokenize('sum')), context).atom.content,23+44);
 
         });
 

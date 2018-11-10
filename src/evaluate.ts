@@ -7,22 +7,23 @@ function lookup(param: string, context: any) {
 }
 
 
-export function evaluateQuoted(node: ASTNode, context: any = {}) {
+export function evaluateQuoted(node: ASTNode, context: any = {}):ASTNode {
 
-    return null;
     function expand(innode: ASTNode) {
+
+        if (innode.type == NodeType.quotedList) {
+            throw ("Nested quoting not supported");
+        }
         if (innode.type == NodeType.escapedList) {
 
-            let k = evaluate(new ASTNode(NodeType.list,innode.children), context);
+            return evaluate(new ASTNode(NodeType.list,innode.children), context);
 
-            //return new ASTNode()
 
         }
 
         if (innode.type == NodeType.escapedAtom) {
-            debugger;
-
-            let k=  evaluate(innode, context);
+            innode.type = NodeType.atom;
+            return evaluate(innode, context);
         }
 
         if (innode.children)
@@ -31,9 +32,9 @@ export function evaluateQuoted(node: ASTNode, context: any = {}) {
         return innode;
     }
 
-    let outnode: any = node.children?node.children.map(expand):null;
+    let outchildrens = node.children?node.children.map(expand):null;
 
-    return new ASTNode(NodeType.list, outnode.children);
+    return new ASTNode(NodeType.list, outchildrens);
 
 }
 
