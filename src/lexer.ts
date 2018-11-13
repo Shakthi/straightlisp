@@ -5,6 +5,7 @@ var lexer = new canto34.Lexer({ languageName: "lisplike" });
 // bring in some predefined types for commas, period, and integers.
 var types = canto34.StandardTokenTypes;
 lexer.addTokenType(types.JsonString());
+
 lexer.addTokenType(types.integer());
 lexer.addTokenType(types.real());
 lexer.addTokenType(types.openParen());
@@ -19,8 +20,15 @@ lexer.addTokenType(types.openBracket());
 
 // add a token for whitespace
 lexer.addTokenType({ 
+  name: "comment",       // give it a name
+  regexp: /\/\/.*/, 
+  ignore:true
+});
+
+// add a token for whitespace
+lexer.addTokenType({ 
   name: "identifier",       // give it a name
-  regexp: /[a-zA-Z][a-zA-Z0-9]*/, // match spaces and tabs
+  regexp: /[a-zA-Z][a-zA-Z0-9]*/, 
 });
 
 
@@ -33,17 +41,23 @@ lexer.addTokenType({
   ignore: true      // don't return this token in the result
 });
 
-// add a token for whitespace
 lexer.addTokenType({ 
-  name: "doller",       // give it a name
-  regexp: /\$/, // match spaces and tabs
+  name: "doller open square bracket",       // give it a name
+  regexp: /\$\[/, // match spaces and tabs
 });
 
+
+lexer.addTokenType({ 
+  name: "newline",       // give it a name
+  regexp: /\n/, // match spaces and tabs
+  ignore:true
+});
 
 lexer.addTokenType({ 
   name: "symbol",       // give it a name
   regexp: /[^ \]}]+/, // match spaces and tabs
 });
+
 
 
 

@@ -20,41 +20,41 @@ export enum NodeType {
 
 export class ASTNode {
 
-    
-    constructor(public type: NodeType, public children?: ASTNode[],public atom?:Token) {
+
+    constructor(public type: NodeType, public children?: ASTNode[], public atom?: Token) {
 
     }
 
-    static  TokenCreate(content: any,type?: string,line: number=-1,
-        character: number =-1):Token{
+    static TokenCreate(content: any, type?: string, line: number = -1,
+        character: number = -1): Token {
 
-            if(!type){
-                if(typeof content === "string"){
-                    type ="string"
-                }else if(typeof content === "number"){
-                    type ="integer"
-                }
-
+        if (!type) {
+            if (typeof content === "string") {
+                type = "string"
+            } else if (typeof content === "number") {
+                type = "integer"
             }
-
-            let token = {
-                content,
-                type,
-                line,
-                character
-
-            }
-
-            return token as Token;
-
 
         }
-    
+
+        let token = {
+            content,
+            type,
+            line,
+            character
+
+        }
+
+        return token as Token;
+
+
+    }
+
 
 }
 
 
-export default function builder(params: Token[]): ASTNode {
+export  function buildeListElements(params: Token[]): ASTNode[] {
 
     var current: Token = null;
     var lastAccepted: Token = null;
@@ -96,7 +96,7 @@ export default function builder(params: Token[]): ASTNode {
     function expect(name: string) {
         if (accept(name))
             return true;
-        throw (`Expected ${name} received ${current ? current.type : "eof"}`)
+        throw Error(`Expected ${name} received ${current ? current.type : "eof"}`)
     }
 
 
@@ -151,17 +151,6 @@ export default function builder(params: Token[]): ASTNode {
 
     function listElement() {
 
-        let prefixUnquote = false;
-        if (accept("doller")) {
-
-            if (!(peak("open square bracket") || peak("identifier"))) {
-                throw `$ expected to follwed by an id or list received ${current ? current.type : "eof"}`
-            }
-
-            prefixUnquote = true;
-
-        }
-
 
 
         if (accept("open bracket")) {
@@ -170,11 +159,15 @@ export default function builder(params: Token[]): ASTNode {
             expect("close bracket");
             return ast;
 
+        } else if (accept("doller open square bracket")) {
+            const ast = new ASTNode(NodeType.escapedList);
+            ast.children = list();
+            expect("close square bracket");
+            return ast;
         }
-
         else if (accept("open square bracket")) {
 
-            const ast = new ASTNode(prefixUnquote ? NodeType.escapedList : NodeType.list);
+            const ast = new ASTNode(NodeType.list);
             ast.children = list();
             expect("close square bracket");
 
@@ -183,7 +176,7 @@ export default function builder(params: Token[]): ASTNode {
 
             let token = atom();
             if (token != null) {
-                const astatom: ASTNode = new ASTNode(prefixUnquote? NodeType.escapedAtom :NodeType.atom);
+                const astatom: ASTNode = new ASTNode(NodeType.atom);
                 astatom.atom = token;
                 return astatom;
             }
@@ -196,12 +189,16 @@ export default function builder(params: Token[]): ASTNode {
 
 
     function start() {
-        let result = listElement();
-        if (result == null) {
-            throw (`Expected list or atom found  ${current ? current.type : "eof"}`);
-        }
-        expect("eof")
-        return result;
+        let allListElements = [];
+        do {
+            let result = listElement();
+            if (result == null) {
+                throw Error(`Expected list or atom found  ${current ? current.type : "eof"}`);
+            }
+            allListElements.push(result);
+
+        } while (!peak("eof"));
+        return allListElements;
     }
 
 
@@ -210,6 +207,13 @@ export default function builder(params: Token[]): ASTNode {
 
 
 
+}
 
+
+
+export default function build(params: Token[]):  ASTNode {
+
+    let listElments = buildeListElements(params);
+    return listElments[0];
 
 }

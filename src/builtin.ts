@@ -49,6 +49,15 @@ function functionWrapper(functi: any) {
 
 
 
+ function bannedFunction () {
+  console.error('ERROR: XXXXXXXX----------car/cdr/cons/ are banned ---------XXXXXX');
+  console.error('Quitting now');
+  process.exit(100);
+
+}
+
+
+
 
 
 
@@ -74,10 +83,48 @@ let builtinContext: any = {
   'print': functionWrapper(function  (arg: ASTNode) {
     return print(arg)
   }),
+  'list': functionWrapper(function  () {
+    return new ASTNode(NodeType.list,[].slice.call(arguments));
+  }),
+  'listFirst': functionWrapper(function  () {
+    let args= [].slice.call(arguments) as ASTNode[];
+    let first = args.shift();
+    return first.children[0];
+  }),
+
+  'listRest': functionWrapper(function  () {
+    let args= [].slice.call(arguments) as ASTNode[];
+    let first = args.shift();
+    
+    return new ASTNode(NodeType.list,first.children.slice(1));
+  }),
+
+
+  'listPush': functionWrapper(function  () {
+    let args= [].slice.call(arguments) as ASTNode[];
+    let first = args.shift();
+    let rest = args;
+    Array.prototype.push.apply(first.children,rest);
+    
+    return first;
+  }),
+  'listPop': functionWrapper(function  () {
+    let args= [].slice.call(arguments) as ASTNode[];
+    let first = args.shift();
+    first.children.pop();
+
+    return first;
+    
+    
+  }),
 
   'printRaw': function  (arg: ASTNode) {
     return print(arg);
-  }
+  },
+  'car':bannedFunction,
+  'cdr':bannedFunction,
+  'cons':bannedFunction
+
 }
 
 

@@ -29,7 +29,7 @@ function callList(node: ASTNode,items:ASTNode[]):ASTNode{
 
 
     items.forEach((element,index)=>{
-        localContext["%"+(index+1)] = element;
+        localContext["$"+(index+1)] = element;
     })
 
     return evaluate(node,localContext);
@@ -42,7 +42,7 @@ export function evaluateQuoted(node: ASTNode, context: any = {}): ASTNode {
     function expand(innode: ASTNode) {
 
         if (innode.type == NodeType.quotedList) {
-            throw ("Nested quoting not supported");
+            throw Error("Nested quoting not supported");
         }
         if (innode.type == NodeType.escapedList) {
 
@@ -51,9 +51,20 @@ export function evaluateQuoted(node: ASTNode, context: any = {}): ASTNode {
 
         }
 
-        if (innode.type == NodeType.escapedAtom) {
-            innode.type = NodeType.atom;
-            return evaluate(innode, context);
+        if (innode.type == NodeType.atom) {
+            if(innode.atom.type == "symbol")
+            {
+                let escapedIdRegex = /\$([a-zA-Z][a-zA-Z0-9]*)/
+                  let res= escapedIdRegex.exec(innode.atom.content);
+                  if(res){
+                    innode.atom.content = res[1];
+                    return evaluate(innode, context);
+
+                  }
+
+                
+            }
+            
         }
 
         if (innode.children)
@@ -70,7 +81,6 @@ export function evaluateQuoted(node: ASTNode, context: any = {}): ASTNode {
 
 }
 
-
 export default function evaluate(node: ASTNode, context: any = {}) {
 
     switch (node.type) {
@@ -85,8 +95,7 @@ export default function evaluate(node: ASTNode, context: any = {}) {
             }
 
         case NodeType.escapedList:
-        case NodeType.escapedAtom:
-            throw "error $ appeared on non quoted list"
+            throw Error("error $ appeared on non quoted list")
 
 
         case NodeType.quotedList:
@@ -111,7 +120,7 @@ export default function evaluate(node: ASTNode, context: any = {}) {
                 }
                 else {
 
-                    throw "Cannot funccall" +res;
+                    throw Error("Cannot funccall" +res);
 
                 }
 
@@ -119,7 +128,7 @@ export default function evaluate(node: ASTNode, context: any = {}) {
             }
 
         default:
-            throw `Should not come here`;
+            throw Error(`Should not come here`);
 
         //debugger;
 

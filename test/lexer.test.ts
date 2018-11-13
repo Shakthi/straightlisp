@@ -32,15 +32,25 @@ describe('lexer', function() {
 
 
     it('Parse $[1   2]', function() {
-      assert.equal(lexer.tokenize("$[1   2]").map((ele:any)=>ele.type).join(),"doller,open square bracket,integer,integer,close square bracket");
+      assert.equal(lexer.tokenize("$[1   2]").map((ele:any)=>ele.type).join(),"doller open square bracket,integer,integer,close square bracket");
     });
 
+    it('Parse $ [1   2]', function() {
+      assert.equal(lexer.tokenize("$ [1   2]").map((ele:any)=>ele.type).join(),"symbol,open square bracket,integer,integer,close square bracket");
+    });
+
+
+
     it('parse $1', function() {
-      assert.equal(lexer.tokenize("$1").map((ele:any)=>ele.type).join(),"doller,integer");
+      assert.equal(lexer.tokenize("$1").map((ele:any)=>ele.type).join(),"symbol");
     });
 
     it('parse [x  $x x]', function() {
-      assert.equal(lexer.tokenize("[x  $x x]").map((ele:any)=>ele.type).join(),"open square bracket,identifier,doller,identifier,identifier,close square bracket");
+      assert.equal(lexer.tokenize("[x  $x x]").map((ele:any)=>ele.type).join(),"open square bracket,identifier,symbol,identifier,close square bracket");
+    });
+
+    it('parse [x  $ x x]', function() {
+      assert.equal(lexer.tokenize("[x  $ x x]").map((ele:any)=>ele.type).join(),"open square bracket,identifier,symbol,identifier,identifier,close square bracket");
     });
 
     it('parse [x  "$x" x]', function() {

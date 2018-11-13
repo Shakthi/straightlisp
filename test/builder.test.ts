@@ -78,7 +78,7 @@ describe('Builder', function () {
       function f() {
         let ast = build(lexer.tokenize('{a]'));
       }
-      assert.throws(f, "Expected close bracket received close square bracket")
+      assert.throws(f, Error("Expected close bracket received close square bracket"))
 
     });
 
@@ -90,6 +90,12 @@ describe('Builder', function () {
     
     it('should build on  [print %1 %2]', function () {
       let ast = build(lexer.tokenize('[print %1 %2]'));
+      assert.equal(ast.children.length, 3);
+    });
+
+
+    it('should build on  [print $1 %2]', function () {
+      let ast = build(lexer.tokenize('[print $1 %2]'));
       assert.equal(ast.children.length, 3);
     });
     
@@ -118,13 +124,7 @@ describe('Builder', function () {
 
 
 
-    it('function should throw', function () {
-      function f() {
-        build(lexer.tokenize('1 1'));
-      }
-
-      assert.throws(f, "Expected eof received integer")
-    });
+  
 
     it('function should throw', function () {
       function f() {
