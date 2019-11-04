@@ -1,8 +1,27 @@
 
 import lexer from './lexer'
-import {Token} from 'canto34'
 import build from './builder'
+import evaluate from './evaluate';
+
+import builtin from './builtin'
 
 
-console.log(build(lexer.tokenize('1')))
+
+const readline = require('readline');
+
+var rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+rl.on('line', (line: string) => {
+
+    evaluate(build(lexer.tokenize(line)),builtin);
+    
+    
+});
+
+
+
+
 

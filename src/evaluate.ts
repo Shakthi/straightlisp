@@ -29,7 +29,7 @@ export default function evaluate(node: ASTNode, context: any = {}) {
             switch (first.atom.type) {
                 case "identifier":
                 case "symbol":
-                    let res:any= lookup(first.atom.content,context)
+                    let res:any = lookup(first.atom.content,context)
                     return res.apply(context,items);
                     
                 default:
